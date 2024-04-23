@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "chromadb": "^1.8.1",
+    "dotenv": "^16.4.5",
+    "openai": "^4.38.3",
+    "prompt-sync": "^4.2.0"
+  }
+}
