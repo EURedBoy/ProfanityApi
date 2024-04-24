@@ -1,6 +1,9 @@
 import { IEmbeddingFunction } from "chromadb";
 import { AzureResponse, AzureData } from "../structure/api/AzureStructure";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
+import { HttpsProxyAgent } from "https-proxy-agent";
+import fetch from "node-fetch";
+
 
 const semanticSplitter = new RecursiveCharacterTextSplitter({
   chunkSize: 25,
@@ -8,13 +11,16 @@ const semanticSplitter = new RecursiveCharacterTextSplitter({
   chunkOverlap: 8,
 });
 
-const { AZURE_PATH, API_KEY } = process.env;
+const agent = new HttpsProxyAgent("http://proxy:3128");
+
+const { AZURE_PATH, API_KEY, USE_PROXY } = process.env;
 
 export class AzureEmbedding implements IEmbeddingFunction {
   async generate(texts: string[]) {
     let embeddings: number[][] = [];
 
-    const result = await fetch(AZURE_PATH!, {
+    const result = await fetch(AZURE_PATH!, { 
+      agent: USE_PROXY ? agent : undefined,
       method: "POST",
       body: JSON.stringify({
         input: texts,

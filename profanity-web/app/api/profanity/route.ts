@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     .filter((word: string) => !WHITELISTED.includes(word.toLowerCase()))
     .join(" ");
 
-  const flagSet = new Set<{ distance: number }>();
+  const flagSet = new Set<{ distance: number, document: string }>();
 
   await Promise.all([
     splitTextIntoSemantics(message).then(async (chunks) => {
@@ -35,20 +35,19 @@ export async function POST(request: Request) {
         queryTexts: chunks,
       });
 
-      for (let chunkDistance of result!.distances!) {
-        flagSet.add({ distance: chunkDistance[0] });
+      for (let [index, chunkDistance] of result!.distances?.entries()!) {
+        flagSet.add({ distance: chunkDistance[0], document: result.documents[index][0]! });
       }
     }),
     (async () => {
-      console.log(splitTextIntoWords(message));
       const result = await chromaCollection.query({
         nResults: 1,
         queryTexts: splitTextIntoWords(message),
       });
       
       if (!result.distances) return;
-      for (let wordDistance of result!.distances!) {
-        flagSet.add({ distance: wordDistance[0] });
+      for (let [index, wordDistance] of result!.distances?.entries()!) {
+        flagSet.add({ distance: wordDistance[0], document: result.documents[index][0]! });
       }
     })(),
   ]);
