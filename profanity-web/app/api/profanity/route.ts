@@ -64,7 +64,7 @@ export async function POST(request: Request) {
   if (!flagSorted || flagSorted.length == 0)
     return error("No flag, contact an administrator");
 
-  let swear: boolean = flagSorted[0] && flagSorted[0].distance < 0.237;
+  let swear: boolean = flagSorted[0] && flagSorted[0].distance < 0.247;
 
   return NextResponse.json({
     message: message,

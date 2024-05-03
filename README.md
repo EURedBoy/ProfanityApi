@@ -10,8 +10,8 @@
 
 > [!NOTE]
 > ### Environment variable:
-> AZURE_PATH= `your azure path` <br>
-> API_KEY= `your api key`
+> **AZURE_PATH**= `your azure path` <br>
+> **API_KEY**= `your api key`
 >  <br> 
 
 ## Overview
